@@ -25,14 +25,14 @@ func mapCreate(Xjiku x:Int,Yjiku y:Int,seisei s:()->Bool = {Bool.random()} ) -> 
     return map
 }
 
-lifeData = mapCreate(Xjiku: 10, Yjiku:40 )
-print(lifeData)
+lifeData = mapCreate(Xjiku: 10, Yjiku:50 )
+//print(lifeData)
 
 //ブロック状に表示してくれる。
 func lifeView(world w:[[Bool]]) {
     print("現在の世界を表示します")
-    let life = "■"
-    let death = "□"
+    let life = "⬛️"
+    let death = "⬜️"
     var ikinokori = 0
     for x in 0..<w.count{
         for y in 0..<w[x].count {
@@ -59,15 +59,15 @@ func nextLife(world w:[[Bool]]) -> [[Bool]] {
     let xCount = w.count
     let yCount = w[0].count
     
-    //周辺の密度を保存する。端っこかどうかの計算をなくすために、一マスづつ前後に大きくしています　countは１から始まり、配列の添字(Index)は、0から始まるので、１足すだけで前後に1マス追加できる。
-    var kamitudo:[[Int]] = Array(repeating:{Array(repeating: 0, count: yCount + 1)}(), count: xCount + 1)
+    //周辺の密度を保存する。端っこかどうかの計算をなくすために、一マスづつ前後に大きくしています。両側ぶんで２足します
+    var kamitudo:[[Int]] = Array(repeating:{Array(repeating: 0, count: yCount + 2)}(), count: xCount + 2)
     
     //返値を保存する場所 生命は減っていく傾向にあるのでfalse始まり。
     var nextWorld = Array(repeating: {Array(repeating: false, count: yCount)}(), count: xCount)
     
     //引数worldを読み込み過密状況を調査する
-    for x in 1..<xCount {
-        for y in 1..<yCount{
+    for x in 0..<xCount {
+        for y in 0..<yCount{
             //マスに生命が存在したら、周辺の過密度を上昇させる
             if w[x][y] == true{
                 //過密度を書き込むループ　ハードコード(直接書き込む事)したほうが早いが、読みづらいのでforループを使う
@@ -82,6 +82,34 @@ func nextLife(world w:[[Bool]]) -> [[Bool]] {
         }
     }
     
-    
+    // kamitudoに基づき生存判定をしていく
+    for x in 1...xCount{
+        for y in 1...yCount {
+            switch kamitudo[x][y] {
+            case 3 :
+                nextWorld[x-1][y-1] = true
+            case 2 :
+                if w [x-1][y-1] == true {
+                    nextWorld[x-1][y-1] = true
+                }
+            default:
+                //xcodeのエラー抑止
+                {}()
+            }
+        }
+    }
     return nextWorld
 }
+
+
+
+lifeData = nextLife(world: lifeData)
+lifeView(world: lifeData)
+
+for _ in 0..<100{
+    lifeData = nextLife(world: lifeData)
+}
+lifeView(world: lifeData)
+
+
+//

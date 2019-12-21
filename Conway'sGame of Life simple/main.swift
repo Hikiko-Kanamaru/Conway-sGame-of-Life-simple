@@ -112,4 +112,15 @@ for _ in 0..<100{
 lifeView(world: lifeData)
 
 
-//
+//特定のマスを指示してデータを操作する関数 worldは現在の状態、pointは編集する場所(X軸,Y軸)、sayouは、セルに行う操作　デフォルトは、反転
+func kaminNoTe(world w :inout [[Bool]],point p :(Int,Int),sayou s:(Bool)->Bool = {!$0}) {
+    w[p.0][p.1] = s(w[p.0][p.1])
+}
+
+
+for i in 0..<lifeData[0].count {
+    kaminNoTe(world: &lifeData, point: (lifeData.count - 1,i))
+}
+
+
+lifeView(world: lifeData)

@@ -26,27 +26,38 @@ func mapCreate(Xjiku x:Int,Yjiku y:Int,seisei s:()->Bool = {Bool.random()} ) -> 
 }
 
 
-lifeData = mapCreate(Xjiku: 10, Yjiku:10 )
-//print(lifeData)
+lifeData = mapCreate(Xjiku: 5, Yjiku:5 )
+print(lifeData)
 
 //ブロック状に表示してくれる。
 func lifeView(world w:[[Bool]]) {
     print("現在の世界を表示します")
+    //今回は生存は、黒、絶滅は白の記号で表示していく
     let life = "⬛️"
     let death = "⬜️"
+    //生存者集を計算数変数
     var ikinokori = 0
-    for x in 0..<w.count{
-        for y in 0..<w[x].count {
-            if w[x][y] == true {
-                ikinokori += 1
-                print(life, separator: "", terminator: "")
-            }else{
-                print(death, separator: "", terminator: "")
-            }
-        }
-        //改行コードの代わり
-        print("")
+    print("|", separator: "", terminator: "")
+    //ループを回して、マップを読み込む
+    for y in 0..<w[0].count{
+        //行列番号の表示 きれいに表示されるのは,10*10くらいまで
+        print("\(y%10)|", separator: "", terminator: "")
     }
+    print("")
+        for x in 0..<w.count{
+            for y in 0..<w[x].count {
+                //値を把握して、どちらを表示するか決める
+                if w[x][y] == true {
+                    ikinokori += 1
+                    print(life, separator: "", terminator: "")
+                }else{
+                    print(death, separator: "", terminator: "")
+                }
+            }
+            //改行コード　端まできたら改行する
+            //行列番号の表示
+             print(":\(x)", separator: "", terminator: "\n")
+        }
     print("現在生き残りは、\(ikinokori)です。約\(ikinokori*100/(w.count * w[0].count))%です。")
 }
 
@@ -202,7 +213,7 @@ repeat{
         print("指示を理解できません")
     }
     
-    
-    
 }while readString != "exit"
+
+
 

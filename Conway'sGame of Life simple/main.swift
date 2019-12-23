@@ -13,8 +13,10 @@ var lifeData:[[Bool]]
 
 //マップを生成してくれる 引数　X軸,Y軸,値生成方法(デフォルはランダム)省略可
 func mapCreate(Xjiku x:Int,Yjiku y:Int,seisei s:()->Bool = {Bool.random()} ) -> [[Bool]] {
+    //上書きしてしまうので、初期値を入れたほうが安全
     var map = [[Bool]]()
     for _ in 0..<x {
+        //一度に列を入れるために一度変数に入れる。
         var yjiku = [Bool]()
         for _ in 0..<y {
             //値生成部分
@@ -38,26 +40,26 @@ func lifeView(world w:[[Bool]]) {
     //生存者集を計算数変数
     var ikinokori = 0
     print("|", separator: "", terminator: "")
-    //ループを回して、マップを読み込む
     for y in 0..<w[0].count{
-        //行列番号の表示 きれいに表示されるのは,10*10くらいまで
+        //列番号の表示 きれいに表示されるのは,10*10くらいまで
         print("\(y%10)|", separator: "", terminator: "")
     }
     print("")
+    //ループを回して、マップを読み込む
+    for y in 0..<w[0].count {
         for x in 0..<w.count{
-            for y in 0..<w[x].count {
-                //値を把握して、どちらを表示するか決める
-                if w[x][y] == true {
-                    ikinokori += 1
-                    print(life, separator: "", terminator: "")
-                }else{
-                    print(death, separator: "", terminator: "")
-                }
+            //値を把握して、どちらを表示するか決める
+            if w[x][y] == true {
+                ikinokori += 1
+                print(life, separator: "", terminator: "")
+            }else{
+                print(death, separator: "", terminator: "")
             }
-            //改行コード　端まできたら改行する
-            //行列番号の表示
-             print(":\(x)", separator: "", terminator: "\n")
         }
+        //改行コード　端まできたら改行する
+        //行番号の表示
+        print(":\(y)", separator: "", terminator: "\n")
+    }
     print("現在生き残りは、\(ikinokori)です。約\(ikinokori*100/(w.count * w[0].count))%です。")
 }
 
@@ -74,8 +76,7 @@ func nextLife(world w:[[Bool]]) -> [[Bool]] {
     //周辺の密度を保存する。型がIntのため、mapCreateを使わない。端っこかどうかの計算をなくすために、一マスづつ前後に大きくしています。両側ぶんで２足します
     var kamitudo:[[Int]] = Array(repeating:{Array(repeating: 0, count: yCount + 2)}(), count: xCount + 2)
     
-    
-    //返値を保存する場所 生命は減っていく傾向にあるのでfalse始まり。
+    //返値を保存する場所 生命は減っていく傾向にあるのでfalse指定{false}。
     //    var nextWorld = Array(repeating: {Array(repeating: false, count: yCount)}(), count: xCount)
     var nextWorld  = mapCreate(Xjiku: xCount, Yjiku: yCount, seisei: {false})
     
@@ -121,9 +122,11 @@ func nextLife(world w:[[Bool]]) -> [[Bool]] {
 }
 
 
-
-lifeData = nextLife(world: lifeData)
 lifeView(world: lifeData)
+lifeData = nextLife(world: lifeData)
+print("一年進めました")
+lifeView(world: lifeData)
+
 /*
 for _ in 0..<100{
     lifeData = nextLife(world: lifeData)
@@ -136,10 +139,13 @@ func kamiNoTe(world w :inout [[Bool]],point p :(Int,Int),sayou s:(Bool)->Bool = 
     w[p.0][p.1] = s(w[p.0][p.1])
 }
 
+//lifeData = [[false, false, true, false, false], [false, true, true, false, false], [true, true, true, false, true], [false, true, false, true, false], [true, false, true, false, false]]
 
+lifeView(world: lifeData)
+print("一番下の行を反転させます")
 //一番下の行を反転させる
 for i in 0..<lifeData[0].count {
-    kamiNoTe(world: &lifeData, point: (lifeData.count - 1,i))
+    kamiNoTe(world: &lifeData, point: (i,lifeData.count - 1))
 }
 
 

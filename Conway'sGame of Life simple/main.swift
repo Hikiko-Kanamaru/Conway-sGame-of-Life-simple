@@ -8,7 +8,7 @@
 
 import Foundation
 
-//ライフゲームの基礎データ[X軸[Y軸]] 要素０で初期化するなら初期値は不要
+//ライフゲームの基礎データ[X軸[Y軸]] 要素０で初期化するなら初期値は不要　リスクのある使い方なので注意。
 var lifeData:[[Bool]]
 
 //マップを生成してくれる 引数　X軸,Y軸,値生成方法(デフォルはランダム)省略可
@@ -139,7 +139,7 @@ func kamiNoTe(world w :inout [[Bool]],point p :(Int,Int),sayou s:(Bool)->Bool = 
     w[p.0][p.1] = s(w[p.0][p.1])
 }
 
-//クロージャの結果を変える場合　{_ in true}　{_ in false}　を試しに使って下さい
+//クロージャの操作を変える場合　{_ in true}　{_ in false}　を試しに使って下さい
 
 
 //lifeData = [[false, false, true, false, false], [false, true, true, false, false], [true, true, true, false, true], [false, true, false, true, false], [true, false, true, false, false]]
